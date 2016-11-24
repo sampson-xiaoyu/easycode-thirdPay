@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
 import com.alipay.config.AlipayConfig;
@@ -20,14 +21,16 @@ import com.alipay.sign.RSA;
 import com.alipay.util.AlipayCore;
 import com.easycode.commons.time.DateFormatUtils;
 import com.easycode.commons.time.DateUtils;
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.common.RandomStringGenerator;
+import com.easycode.pay.common.Signature;
+import com.easycode.pay.common.XMLParser;
+import com.easycode.pay.protocol.payProtocol.weChat.AppPayReqData;
+import com.easycode.payClient.AliPayClient;
+import com.easycode.payClient.WeChatPayClient;
 import com.easycode.payManager.PayManager;
-import com.wcpay.WCPay;
-import com.wcpay.common.Configure;
-import com.wcpay.common.RandomStringGenerator;
-import com.wcpay.common.Signature;
-import com.wcpay.common.XMLParser;
-import com.wcpay.protocol.pay_protocol.AppPayReqData;
 
+@Service
 public class PayManagerImpl implements PayManager{
 	
 	private static Logger logger = LoggerFactory.getLogger(PayManagerImpl.class.getName());
@@ -55,13 +58,15 @@ public class PayManagerImpl implements PayManager{
      */
     @Value("${alipay.return.url}")
     private String alipayReturnUrl;
+    @Value("${alipay.notify.url}")
+    private String alipayNotifyUrl;
     @Value("${alipay.limit_pay_max}")
     private int alilimitPay;
 	
 	@Override
-	public String toAliPay(String paymentNum,String productName,BigDecimal totalFee,Date createTime) throws UnsupportedEncodingException {
+	public String toAliMobilePay(String paymentNum,String productName,BigDecimal totalFee,Date createTime) throws UnsupportedEncodingException {
 		// TODO Auto-generated method stub
-		 Map<String,String> params=getAliPayInfoMap(paymentNum,productName,totalFee,createTime);
+		Map<String,String> params=getAliMobilePayInfoMap(paymentNum,productName,totalFee,createTime);
 	        //将post接收到的数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串。需要排序。
         String data= AlipayCore.createLinkString(params);
         //打印待签名字符串。工程目录下的log文件夹中。
@@ -74,7 +79,46 @@ public class PayManagerImpl implements PayManager{
         return data;
 	}
 	
-	private Map<String,String> getAliPayInfoMap(String paymentNum,String productName,BigDecimal totalFee,Date createTime){
+	@Override
+	public String toAliPcPay(String paymentNum, String productName, BigDecimal totalFee, Date createTime)
+			throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		Map<String,String> params=getAliPcPayInfoMap(paymentNum,productName,totalFee,createTime);
+        //将post接收到的数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串。需要排序。
+	    String data= AlipayCore.createLinkString(params);
+	    //打印待签名字符串。工程目录下的log文件夹中。
+	    logger.info("支付验签数据:"+data);
+	    //将待签名字符串使用私钥签名。
+	    String rsa_sign= URLEncoder.encode(RSA.sign(data, AlipayConfig.private_key, AlipayConfig.input_charset),AlipayConfig.input_charset);
+	    //把签名得到的sign和签名类型sign_type拼接在待签名字符串后面。
+	    data=data+"&sign=\""+rsa_sign+"\"&sign_type=\""+AlipayConfig.sign_type+"\"";
+	    logger.info("支付验签后数据:"+data);
+	    try {
+			String resdata = AliPayClient.requestAliPcPayService(data);
+			return resdata;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return data;
+	}
+	
+	private Map<String,String> getAliPcPayInfoMap(String paymentNum,String productName,BigDecimal totalFee,Date createTime){
+        //封装参数
+        Map<String,String> params=getAliPayCommonInfoMap(paymentNum,productName,totalFee,createTime);
+        params.put("service",getPayParamValueStr("create_direct_pay_by_user"));
+        params.put("return_url", getPayParamValueStr(alipayReturnUrl));
+        return params;
+    }
+	
+	private Map<String,String> getAliMobilePayInfoMap(String paymentNum,String productName,BigDecimal totalFee,Date createTime){
+        //封装参数
+        Map<String,String> params=getAliPayCommonInfoMap(paymentNum,productName,totalFee,createTime);
+        params.put("service",getPayParamValueStr("mobile.securitypay.pay"));
+        return params;
+    }
+	
+	private Map<String,String> getAliPayCommonInfoMap(String paymentNum,String productName,BigDecimal totalFee,Date createTime){
         //封装参数
         Map<String,String> params=new HashMap<>();
         params.put("partner", getPayParamValueStr(AlipayConfig.partner));
@@ -83,20 +127,17 @@ public class PayManagerImpl implements PayManager{
         params.put("subject",getPayParamValueStr(productName));
         params.put("body",getPayParamValueStr(productName));
         params.put("total_fee",getPayParamValueStr(totalFee.toString()));
-        params.put("notify_url",getPayParamValueStr(alipayReturnUrl));
+        params.put("notify_url",getPayParamValueStr(alipayNotifyUrl));
         params.put("service",getPayParamValueStr("mobile.securitypay.pay"));
         params.put("orderInfo",getPayParamValueStr("1"));
         params.put("_input_charset",getPayParamValueStr("utf-8"));
         params.put("it_b_pay",getPayParamValueStr(DateFormatUtils.format(DateUtils.addMinutes(createTime,30), "yyyy-MM-dd HH:mm:ss")));
         return params;
-
-
-
     }
 	
-	 private String getPayParamValueStr(String value){
+	private String getPayParamValueStr(String value){
 	        return "\""+value+"\"";
-	    }
+	}
 	
 	@Override
 	public Map<String, Object> toWChatPay(String productName,String paymentNum, int totalFee,String ip, String deviceInfo , Date createTime)
@@ -105,7 +146,7 @@ public class PayManagerImpl implements PayManager{
 		//调用微信支付的支付接口获取支付信息
         String resdata= null;
         try {
-            WCPay.initSDKConfiguration(key,appID,mchID,certLocalPath,certPassword);
+            WeChatPayClient.initSDKConfiguration(key,appID,mchID,certLocalPath,certPassword);
             //封装统一下单接口所需的数据
             AppPayReqData scanPayReqData= new AppPayReqData(
             		productName,
@@ -120,7 +161,7 @@ public class PayManagerImpl implements PayManager{
                     wchatReturnUrl,
                     //对使用系用卡额度做限制limitPay为信用卡最大限额元为单位*100换算成分
                     (wchatlimitPay*100)>totalFee?null:"no_credit");
-            resdata = WCPay.requestAppPayService(scanPayReqData);
+            resdata = WeChatPayClient.requestAppPayService(scanPayReqData);
         } catch (Exception e) {
             logger.error("请求统一下单失败:"+e.getMessage());
         }

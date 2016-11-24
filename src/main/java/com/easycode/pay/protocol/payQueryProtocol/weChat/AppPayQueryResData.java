@@ -1,4 +1,4 @@
-package com.wcpay.protocol.pay_query_protocol;
+package com.easycode.pay.protocol.payQueryProtocol.weChat;
 
 /**
  * User: rizenguo

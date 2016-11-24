@@ -1,19 +1,12 @@
-package com.wcpay.protocol.pay_protocol;
-
-/**
- * User: rizenguo
- * Date: 2014/10/22
- * Time: 21:29
- */
-
-
-import com.wcpay.common.Configure;
-import com.wcpay.common.RandomStringGenerator;
-import com.wcpay.common.Signature;
+package com.easycode.pay.protocol.payProtocol.weChat;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.common.RandomStringGenerator;
+import com.easycode.pay.common.Signature;
 
 /**
  * 请求被扫支付API需要提交的数据

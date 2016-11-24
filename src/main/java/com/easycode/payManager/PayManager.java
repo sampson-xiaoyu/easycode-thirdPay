@@ -13,13 +13,22 @@ import org.xml.sax.SAXException;
 public interface PayManager {
 	
 	/**
-     * 支付宝支付
+     * 支付宝手机端支付
      * @param paymentNum
      * @param currentUser
      * @return
      * @throws UnsupportedEncodingException
      */
-    String toAliPay(String paymentNum,String productName,BigDecimal totalFee,Date createTime) throws UnsupportedEncodingException;
+    String toAliMobilePay(String paymentNum,String productName,BigDecimal totalFee,Date createTime) throws UnsupportedEncodingException;
+    
+    /**
+     * 支付宝pc端支付
+     * @param paymentNum
+     * @param currentUser
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    String toAliPcPay(String paymentNum,String productName,BigDecimal totalFee,Date createTime) throws UnsupportedEncodingException;
 
 
     /**

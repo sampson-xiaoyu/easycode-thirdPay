@@ -1,14 +1,11 @@
-package com.wcpay.service;
+package com.easycode.payClient.service;
 
-import com.wcpay.common.Configure;
-import com.wcpay.protocol.pay_batch.BatchPayReqData;
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.protocol.payBatch.weChat.BatchPayReqData;
 
-/**
- *
- */
-public class BatchPayService extends BaseService {
+public class WeChatBatchPayService extends WeChatBaseService {
 
-    public BatchPayService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public WeChatBatchPayService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         super(Configure.PAY_BATCH_API);
     }
 

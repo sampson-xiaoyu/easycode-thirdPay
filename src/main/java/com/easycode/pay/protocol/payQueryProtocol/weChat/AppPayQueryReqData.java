@@ -1,13 +1,13 @@
-package com.wcpay.protocol.pay_query_protocol;
+package com.easycode.pay.protocol.payQueryProtocol.weChat;
 
-
-import com.wcpay.common.Configure;
-import com.wcpay.common.RandomStringGenerator;
-import com.wcpay.common.Signature;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.common.RandomStringGenerator;
+import com.easycode.pay.common.Signature;
 
 /**
  * User: rizenguo

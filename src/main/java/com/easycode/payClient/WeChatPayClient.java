@@ -1,18 +1,18 @@
-package com.wcpay;
+package com.easycode.payClient;
 
 
-import com.wcpay.common.Configure;
-import com.wcpay.protocol.pay_batch.BatchPayReqData;
-import com.wcpay.protocol.pay_protocol.AppPayReqData;
-import com.wcpay.protocol.pay_query_protocol.AppPayQueryReqData;
-import com.wcpay.service.AppPayQueryService;
-import com.wcpay.service.AppPayService;
-import com.wcpay.service.BatchPayService;
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.protocol.payBatch.weChat.BatchPayReqData;
+import com.easycode.pay.protocol.payProtocol.weChat.AppPayReqData;
+import com.easycode.pay.protocol.payQueryProtocol.weChat.AppPayQueryReqData;
+import com.easycode.payClient.service.WeChatAppPayQueryService;
+import com.easycode.payClient.service.WeChatAppPayService;
+import com.easycode.payClient.service.WeChatBatchPayService;
 
 /**
  * SDK总入口
  */
-public class WCPay {
+public class WeChatPayClient {
 
     /**
      * 初始化SDK依赖的几个关键配置
@@ -37,7 +37,7 @@ public class WCPay {
      * @throws Exception
      */
     public static String requestAppPayService(AppPayReqData scanPayReqData) throws Exception{
-        return new AppPayService().request(scanPayReqData);
+        return new WeChatAppPayService().request(scanPayReqData);
     }
 
     /**
@@ -47,7 +47,7 @@ public class WCPay {
      * @throws Exception
      */
 	public static String requestScanPayQueryService(AppPayQueryReqData scanPayQueryReqData) throws Exception{
-		return new AppPayQueryService().request(scanPayQueryReqData);
+		return new WeChatAppPayQueryService().request(scanPayQueryReqData);
 	}
 
 
@@ -58,7 +58,7 @@ public class WCPay {
      * @throws Exception
      */
 	public static String requestBatchPayService(BatchPayReqData batchPayReqData)throws Exception{
-        return new BatchPayService().request(batchPayReqData);
+        return new WeChatBatchPayService().request(batchPayReqData);
     }
 
 }

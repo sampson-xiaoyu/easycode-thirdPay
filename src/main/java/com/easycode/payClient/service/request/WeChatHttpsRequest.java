@@ -1,9 +1,12 @@
-package com.wcpay.common;
+package com.easycode.payClient.service.request;
 
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.common.Log;
+import com.easycode.pay.common.Util;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
-import com.wcpay.service.IServiceRequest;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -27,7 +30,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 
-public class HttpsRequest implements IServiceRequest {
+public class WeChatHttpsRequest implements IServiceRequest {
 
     public interface ResultListener {
 
@@ -36,7 +39,7 @@ public class HttpsRequest implements IServiceRequest {
 
     }
 
-    private static Log log = new Log(LoggerFactory.getLogger(HttpsRequest.class));
+    private static Log log = new Log(LoggerFactory.getLogger(WeChatHttpsRequest.class));
 
     //表示请求器是否已经做了初始化工作
     private boolean hasInit = false;
@@ -53,11 +56,12 @@ public class HttpsRequest implements IServiceRequest {
     //HTTP请求器
     private CloseableHttpClient httpClient;
 
-    public HttpsRequest() throws UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        init();
+    
+    public WeChatHttpsRequest() throws UnrecoverableKeyException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException, IOException{
+    	init();
     }
-
-    private void init() throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
+    
+    protected void init() throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
 
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         FileInputStream instream = new FileInputStream(new File(Configure.getCertLocalPath()));//加载本地的证书进行https加密传输
@@ -159,7 +163,8 @@ public class HttpsRequest implements IServiceRequest {
 
         return result;
     }
-
+    
+    
     /**
      * 设置连接超时时间
      *
@@ -191,5 +196,5 @@ public class HttpsRequest implements IServiceRequest {
      */
     public void setRequestConfig(RequestConfig requestConfig) {
         requestConfig = requestConfig;
-    }
+    }	
 }

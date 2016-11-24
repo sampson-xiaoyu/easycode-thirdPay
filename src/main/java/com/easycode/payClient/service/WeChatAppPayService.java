@@ -1,16 +1,11 @@
-package com.wcpay.service;
+package com.easycode.payClient.service;
 
-import com.wcpay.common.Configure;
-import com.wcpay.protocol.pay_protocol.AppPayReqData;
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.protocol.payProtocol.weChat.AppPayReqData;
 
-/**
- * User: rizenguo
- * Date: 2014/10/29
- * Time: 16:03
- */
-public class AppPayService extends BaseService {
+public class WeChatAppPayService extends WeChatBaseService {
 
-    public AppPayService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public WeChatAppPayService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         super(Configure.PAY_API);
     }
 

@@ -1,14 +1,14 @@
-package com.wcpay.protocol.pay_batch;
+package com.easycode.pay.protocol.payBatch.weChat;
 
 
-
-import com.wcpay.common.Configure;
-import com.wcpay.common.RandomStringGenerator;
-import com.wcpay.common.Signature;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.common.RandomStringGenerator;
+import com.easycode.pay.common.Signature;
 
 /**
  * 批量打款数据请求

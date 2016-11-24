@@ -1,4 +1,4 @@
-package com.wcpay.common;
+package com.easycode.pay.common;
 
 /**
  * User: rizenguo
@@ -30,7 +30,7 @@ public class Configure {
 	private static boolean useThreadToDoReport = true;
 
 
-
+	public static String ALI_PAY_API = "https://mapi.alipay.com/gateway.do?";
 
 	//机器IP
 	private static String ip = "";
@@ -70,7 +70,9 @@ public class Configure {
 		Configure.useThreadToDoReport = useThreadToDoReport;
 	}
 
-	public static String HttpsRequestClassName = "com.wcpay.common.HttpsRequest";
+	public static String HttpsRequestClassName = "com.easycode.payClient.service.request.WeChatHttpsRequest";
+	
+	public static String AliHttpsRequestClassName = "com.easycode.payClient.service.request.AliHttpsRequest";
 
 	public static void setKey(String key) {
 		Configure.key = key;

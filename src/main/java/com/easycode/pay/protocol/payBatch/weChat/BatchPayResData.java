@@ -1,4 +1,4 @@
-package com.wcpay.protocol.pay_batch;
+package com.easycode.pay.protocol.payBatch.weChat;
 
 
 

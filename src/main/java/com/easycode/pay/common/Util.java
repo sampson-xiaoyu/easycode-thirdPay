@@ -1,4 +1,4 @@
-package com.wcpay.common;
+package com.easycode.pay.common;
 
 import com.thoughtworks.xstream.XStream;
 import org.slf4j.LoggerFactory;

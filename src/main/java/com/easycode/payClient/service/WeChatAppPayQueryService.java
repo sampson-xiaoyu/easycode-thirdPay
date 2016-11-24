@@ -1,15 +1,12 @@
-package com.wcpay.service;
+package com.easycode.payClient.service;
 
 
-import com.wcpay.common.Configure;
-import com.wcpay.protocol.pay_query_protocol.AppPayQueryReqData;
+import com.easycode.pay.common.Configure;
+import com.easycode.pay.protocol.payQueryProtocol.weChat.AppPayQueryReqData;
 
-/**
- *
- */
-public class AppPayQueryService extends BaseService{
+public class WeChatAppPayQueryService extends WeChatBaseService{
 
-    public AppPayQueryService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public WeChatAppPayQueryService() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         super(Configure.PAY_QUERY_API);
     }
 
